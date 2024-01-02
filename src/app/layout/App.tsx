@@ -1,10 +1,19 @@
+import { Button } from "semantic-ui-react"
 
 
 function App() {
   
 
   return (
-    <h1> Welcome to Revents</h1>
+    <div>
+
+      <h1> Welcome to Revents</h1>
+      <button className='ui icon red button'>
+        <i className="user icon"></i> CSS Button
+      </button>
+      <Button icon='smile' content='React button' color='green' loading={true}/>
+
+    </div>
   )
 }
 
