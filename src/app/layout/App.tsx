@@ -1,19 +1,23 @@
-import { Button } from "semantic-ui-react"
+
+import { Container } from "semantic-ui-react"
+import EventDashboard from "../../features/events/dashboard/EventDashboard"
+import NavBar from "./NavBar"
 
 
 function App() {
   
 
   return (
-    <div>
+    // Added fragment instead of div for the parent <div>
+    <>
+    {/* Got single parent Fragment and two siblings */}
+    <NavBar/>
+    <Container className="main">
 
-      <h1> Welcome to Revents</h1>
-      <button className='ui icon red button'>
-        <i className="user icon"></i> CSS Button
-      </button>
-      <Button icon='smile' content='React button' color='green' loading={true}/>
-
-    </div>
+    <EventDashboard/>
+    </Container>
+     
+    </>
   )
 }
 
