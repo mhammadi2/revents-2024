@@ -1,4 +1,4 @@
-import { AppEvent } from "../../../app/types/events";
+import { AppEvent } from "../../../app/types/event";
 import EventListItem from "./EventListItem";
 
 
