@@ -1,6 +1,10 @@
 import { Image, List } from "semantic-ui-react"
 
-export default function EventListAttendee({attendee}: any) {
+
+type Props={
+  attendee: Attendee
+}
+export default function EventListAttendee({attendee}: Props) {
   return (
     <> 
     <List.Item>
