@@ -41,6 +41,7 @@ function updateEvent(updatedEvent: AppEvent) {
 }
 function deleteEvent(eventId: string) {
   setEvents(events.filter(evt => evt.id !== eventId));
+  //  Return a new array but event id
 }
 
   return (
@@ -49,6 +50,7 @@ function deleteEvent(eventId: string) {
        <EventList  events={events} 
       //  selectEvent={handleSelectEvent}
       selectEvent={selectEvent}
+      deleteEvent={deleteEvent}
        />
       </Grid.Column>
       <Grid.Column width={6}>
