@@ -56,6 +56,7 @@ function deleteEvent(eventId: string) {
         {formOpen && 
         <EventForm 
         setFormOpen={setFormOpen} 
+        updateEvent={updateEvent}
         addEvent={addEvent}
         selectedEvent={selectedEvent}
         key= {selectedEvent? selectedEvent.id: 'create'}
