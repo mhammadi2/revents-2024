@@ -10,15 +10,15 @@ import { useEffect, useState } from "react";
 type Props ={
   formOpen:boolean
   setFormOpen: (value:boolean) => void;
-  // selectEvent: (event: AppEvent | null) => void
-  // selectedEvent: AppEvent | null
+  selectEvent: (event: AppEvent | null) => void
+  selectedEvent: AppEvent | null
 }
 
 // export default function EventDashboard({formOpen, setFormOpen, selectEvent, selectedEvent}: Props) {
-export default function EventDashboard({formOpen, setFormOpen}: Props) {
+export default function EventDashboard({formOpen, setFormOpen, selectEvent, selectedEvent}: Props) {
   const [events, setEvents] = useState<AppEvent[]>([])
   // console.log(events)
-  const [selectedEvent, setSelectedEvent] = useState<AppEvent | null>(null);
+ 
 
 
 useEffect(()=> {
@@ -31,10 +31,7 @@ function addEvent(event: AppEvent){
   })
 }
 
-function handleSelectEvent(event: AppEvent) {
-  setSelectedEvent(event);
-  setFormOpen(true);
-}
+
 
 
 function updateEvent(updatedEvent: AppEvent) {
@@ -50,7 +47,8 @@ function deleteEvent(eventId: string) {
     <Grid>
       <Grid.Column width={10}>
        <EventList  events={events} 
-       selectEvent={handleSelectEvent}
+      //  selectEvent={handleSelectEvent}
+      selectEvent={selectEvent}
        />
       </Grid.Column>
       <Grid.Column width={6}>
@@ -60,6 +58,8 @@ function deleteEvent(eventId: string) {
         setFormOpen={setFormOpen} 
         addEvent={addEvent}
         selectedEvent={selectedEvent}
+        key= {selectedEvent? selectedEvent.id: 'create'}
+        // use these ternary operators as conditinal as they are much shorter syntax. Just if -else condition
         />}
       </Grid.Column>
     </Grid>
