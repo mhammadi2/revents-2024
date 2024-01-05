@@ -1,5 +1,6 @@
 import { Form, Button, Header, Segment } from "semantic-ui-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 // import { createId } from "@paralleldrive/cuid2";
 
 
@@ -82,7 +83,7 @@ export default function EventForm() {
                 />
             </Form.Field>
                 <Button type='submit' floated='right' positive content='Submit' />
-                <Button type='button' floated='right'  content='Cancel' />
+                <Button as={Link} to='/events' type='button' floated='right'  content='Cancel' />
         </Form>
 
     </Segment>
