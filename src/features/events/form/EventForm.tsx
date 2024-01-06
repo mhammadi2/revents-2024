@@ -1,11 +1,20 @@
 import { Form, Button, Header, Segment } from "semantic-ui-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { ChangeEvent, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/store";
+import { createEvent, updateEvent } from "../eventSlice";
+import { createId } from "@paralleldrive/cuid2";
 // import { createId } from "@paralleldrive/cuid2";
 
 
 export default function EventForm() {
-    const initialValues =  {
+    // const {id} = useParams();
+    let {id} = useParams();
+    const event = useAppSelector(state => state.events.events.find(e => e.id ===id));
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
+    const initialValues = event ?? {
         title:'',
         category:'',
         description:'',
@@ -13,10 +22,17 @@ export default function EventForm() {
         venue:'',
         date:''
     }
+    // Go to event or Set an Empty values
 
     const [values, setValues] = useState(initialValues);
 
     function onSubmit(){
+        id = id ?? createId()
+        event
+            ? dispatch(updateEvent({...event, ...values}))
+            // : dispatch(createEvent({...values, id:createId(), hostedBy:'', attendees: [],hostPhotoURL: ''})) problem with createId
+            : dispatch(createEvent({...values, id, hostedBy:'', attendees: [],hostPhotoURL: ''}))
+        navigate(`/events/${id}`);
         console.log(values)
         
     }
@@ -28,7 +44,7 @@ export default function EventForm() {
 
   return (
     <Segment clearing>
-        <Header content={'Create Event'}/>
+        <Header content={event ? 'Update event' : 'Create Event'}/>
         <Form onSubmit={onSubmit}>
             <Form.Field>
                 <input 
