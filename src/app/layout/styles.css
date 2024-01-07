@@ -23,3 +23,7 @@ body{
 .masthead h1.u1.header {
     font-size: 4em;
 }
+/* added following to make date picker full width */
+.react-datepicker-wrapper{
+    width:100%
+}
