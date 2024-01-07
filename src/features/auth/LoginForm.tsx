@@ -26,7 +26,7 @@ export default function LoginForm() {
                 <Form.Input 
                     defaultValue=''
                     placeholder='Email address'
-                    {...register('email', {required: true, pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/})}
+                    {...register('email', {required: true, pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/})}
                     // pattern is a second validation tools got from https://www.regexlib.com/?AspxAutoDetectCookieSupport=1
                     error={
                         errors.email?.type === 'required' && 'Email is required' ||

@@ -1,7 +1,8 @@
 // to add a new event ,to update an existing event and to delete 
-import { createSlice } from "@reduxjs/toolkit"
-import { sampleData } from "../../app/api/sampleData"
-import { AppEvent } from "../../app/types/event"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+// import { sampleData } from "../../app/api/sampleData"
+import { AppEvent } from "../../app/types/event";
+import {Timestamp} from 'firebase/firestore';
 
 
 type State ={
@@ -10,7 +11,8 @@ type State ={
 }
 // Intital state with Type of state
 const initialState: State = {
-    events: sampleData
+    // events: sampleData
+    events: []
 
 }
 
@@ -19,6 +21,21 @@ export const eventSlice = createSlice({
     // name will show in Redux dev tools
     initialState,
     reducers:{
+        setEvents: {
+            reducer: (state,action: PayloadAction<AppEvent[]>)=>{
+            state.events = action.payload
+        },
+        prepare: (events: any) => {
+            const mapped = events.map((e:any)  => {
+                //   return {...e, date:(e.date as Timestamp).toDate().toDateString()}
+                  return {...e, date:(e.date as Timestamp).toDate().toISOString()}
+
+            });
+            return {payload:mapped}
+
+            }
+        },
+
         createEvent: (state,action) => {
             // take state and action as parameters
             state.events.push(action.payload);
@@ -35,4 +52,4 @@ export const eventSlice = createSlice({
     }
 })
 
-export const {createEvent, updateEvent,deleteEvent}=eventSlice.actions;
+export const {createEvent, updateEvent,deleteEvent,setEvents}=eventSlice.actions;

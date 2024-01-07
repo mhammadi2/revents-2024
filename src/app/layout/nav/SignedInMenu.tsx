@@ -1,7 +1,7 @@
 import { Menu, Image, Dropdown, DropdownMenu } from "semantic-ui-react";
 import {Link, useNavigate} from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { signIn, signOut } from "../../../features/auth/authSlice";
+import {  signOut } from "../../../features/auth/authSlice";
 
 
 // type Props ={
