@@ -4,7 +4,7 @@ import EventDetailedInfo from "./EventDetailedInfo";
 import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSidebar from "./EventDetailedSidebar";
 import { useParams } from "react-router-dom";
-import { useAppSelector } from "../../../app/store";
+import { useAppSelector } from "../../../app/store/store";
 
 export default function EventDetailedPage() {
   const {id} = useParams();

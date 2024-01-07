@@ -1,6 +1,6 @@
 import { Grid, GridColumn } from "semantic-ui-react";
 import EventList from "./EventList";
-import { useAppSelector } from "../../../app/store";
+import { useAppSelector } from "../../../app/store/store";
 
 // import { sampleData } from "../../../app/api/sampleData";
 // import { AppEvent } from "../../../app/types/event";
