@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 export const sampleData = [
     {
         id: '1',
-        title: 'Trip to Empire State building 100 ',
+        title: 'Trip to Empire State building 200 ',
         date: Timestamp.fromDate(new Date(Date.now()+30*86400000)),
         // 30 days converter to msec=> 30*8640000
         category: 'culture',

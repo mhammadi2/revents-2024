@@ -1,55 +1,98 @@
 import { Form, Button, Header, Segment } from "semantic-ui-react";
-// import { ChangeEvent, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../app/store/store";
-// import { createEvent, updateEvent } from "../eventSlice";
-// import { createId } from "@paralleldrive/cuid2";
+import {  useAppSelector } from "../../../app/store/store";
 import { Controller, useForm, FieldValues } from "react-hook-form";
 import { categoryOptions } from "./categoryOptions";
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
-import { createId } from "@paralleldrive/cuid2";
-import { createEvent, updateEvent } from "../eventSlice";
-// import { createId } from "@paralleldrive/cuid2";
-
+import { Timestamp} from "firebase/firestore";
+import LoadingComponent from "../../../app/layout/LoadingComponents";
+import { AppEvent } from '../../../app/types/event';
+import { toast } from "react-toastify";
+import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
+import { useEffect } from "react";
+import { actions } from "../eventSlice";
 
 export default function EventForm() {
-    const {register,handleSubmit, control, setValue, formState: {errors, isValid, isSubmitting}} = useForm(
+    // load document from events collection
+    const {loadDocument, create, update} = useFireStore('events');
+     const {register,handleSubmit, control, setValue, formState: {errors, isValid, isSubmitting}} = useForm(
         {
-            mode: 'onTouched'
+            mode: 'onTouched',
+            defaultValues: async () => {
+                if (event) return {...event, date: new Date(event.date)}
         }
-    );
-    // const {id} = useParams();
-    let {id} = useParams();
-    const event = useAppSelector(state => state.events.events.find(e => e.id ===id));
-    const dispatch = useAppDispatch()
+});
+    const {id} = useParams();
+    // let {id} = useParams();
+    const event = useAppSelector(state => state.events.data.find(e => e.id ===id));
+    // const dispatch = useAppDispatch()
+    const {status} = useAppSelector(state => state.events);
     const navigate = useNavigate()
 
-    // const initialValues = event ?? {
-    //     title:'',
-    //     category:'',
-    //     description:'',
-    //     city:'',
-    //     venue:'',
-    //     date:''
-    // }
-    // Go to event or Set an Empty values
+    useEffect(()=> {
+        if (!id) return;
+        loadDocument(id, actions)
+    }, [id,loadDocument])
 
-    // const [values, setValues] = useState(initialValues);
+    async function updateEvent(data: AppEvent) {
+        if (!event) return;
+        // const docRef = doc(db,'events', event.id);
+        // await updateDoc(docRef, {
+        await update(data.id, {
+            ...data,
+            date: Timestamp.fromDate(data.date as unknown as Date)
+        })
+    }
+    async function createEvent(data: FieldValues) {
+        // const newEventRef =doc(collection(db,'events'));
+        // await setDoc(newEventRef, {
+        const ref = await create({
+            ...data,
+            hostedBy: 'bob', 
+            attendees: [], 
+            hostPhotoURL: '',
+            date: Timestamp.fromDate(data.date as unknown as Date)
+        })
+        return ref;
+    } 
+    async function handleCancelToggle(event: AppEvent) {
+        await update(event.id, {
+            isCancelled: !event.isCancelled
+        });
+        toast.success(`Event has been ${event.isCancelled ? 'uncancelled' : 'cancelled'}`)
+    }
 
-    function onSubmit(data:FieldValues){
-            // console.log(data);
-        id = id ?? createId()
-        event
-            // ? dispatch(updateEvent({...event, ...values}))
-            // // : dispatch(createEvent({...values, id:createId(), hostedBy:'', attendees: [],hostPhotoURL: ''})) problem with createId
-            // : dispatch(createEvent({...values, id, hostedBy:'', attendees: [],hostPhotoURL: ''}))
-            ? dispatch(updateEvent({ ...event, ...data, date: data.date.toString()}))
-            : dispatch(createEvent({ ...data, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '', date: data.date.toString()}))
-        navigate(`/events/${id}`);
+    async function onSubmit(data: FieldValues) {
+        try {
+            if (event) {
+                await updateEvent({...event, ...data});
+                navigate(`/events/${event.id}`);
+            } else {
+                const ref = await createEvent(data);
+                navigate(`/events/${ref?.id}`)
+            }
+        } catch (error: any) {
+            toast.error(error.message);
+            console.log(error.message);
+        }
+    }
+
+    if (status === 'loading') return <LoadingComponent />
+    
+    // function onSubmit(data:FieldValues){
+    //         // console.log(data);
+    //     // id = id ?? createId()
+    //     // event
+    //         // ? dispatch(updateEvent({...event, ...values}))
+    //         // // : dispatch(createEvent({...values, id:createId(), hostedBy:'', attendees: [],hostPhotoURL: ''})) problem with createId
+    //         // : dispatch(createEvent({...values, id, hostedBy:'', attendees: [],hostPhotoURL: ''}))
+    //     //     ? dispatch(updateEvent({ ...event, ...data, date: data.date.toString()}))
+    //     //     : dispatch(createEvent({ ...data, id, hostedBy: 'bob', attendees: [], hostPhotoURL: '', date: data.date.toString()}))
+    //     // navigate(`/events/${id}`);
        
         
-    }
+    // }
 
     // function handleInputChange(e: ChangeEvent<HTMLInputElement>){
     //     const {name, value} = e.target;
@@ -142,6 +185,15 @@ export default function EventForm() {
             disabled={!isValid}
             type='submit' floated='right' positive content='Submit' />
             <Button disabled={isSubmitting} as={Link} to='/events' type='button' floated='right'  content='Cancel' /> */}
+            {event && (
+                    <Button 
+                        type='button'
+                        floated='left'
+                        color={event.isCancelled ? 'green' : 'red'}
+                        onClick={() => handleCancelToggle(event)}
+                        content={event.isCancelled ? 'Reactivate event' : 'Cancel event'}
+                    />
+                )}
              <Button
                     loading={isSubmitting}
                     disabled={!isValid}
