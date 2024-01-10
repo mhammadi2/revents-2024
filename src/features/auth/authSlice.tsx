@@ -41,11 +41,13 @@ export const authSlice = createSlice({
             }
             
         },
-        signOut: (state) => {
+        // signOut: (state) => {
+        logout: (state) => {
             state.authenticated = false;
             state.currentUser = null;
         }
     }
 })
 
-export const {signIn, signOut} = authSlice.actions; 
+// export const {signIn, signOut} = authSlice.actions; 
+export const {signIn, logout} = authSlice.actions; 

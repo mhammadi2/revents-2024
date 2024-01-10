@@ -5,7 +5,7 @@ import { useAppDispatch } from '../../app/store/store';
 import ModalWrapper from '../../app/common /modals/ModalWrapper';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../app/config/firebase';
-import { signIn } from './authSlice';
+// import { signIn } from './authSlice';
 import { closeModal } from '../../app/common /modals/modalSlice';
 // import { closeModal } from '../../app/common/modals/modalSlice';
 // import { signIn } from './authSlice';
@@ -27,9 +27,10 @@ export default function LoginForm() {
     // }
     async function onSubmit(data: FieldValues) {
         try {
-            const result = await signInWithEmailAndPassword(auth, data.email, data.password);
-            console.log(result);
-            dispatch(signIn(result.user));
+            // const result = await signInWithEmailAndPassword(auth, data.email, data.password);
+            await signInWithEmailAndPassword(auth, data.email, data.password);
+            // console.log(result);
+            // dispatch(signIn(result.user)); as already done the sign in the top level App.tsx file.
             dispatch(closeModal());
             // await signInWithEmailAndPassword(auth, data.email, data.password);
             // dispatch(closeModal());
