@@ -6,6 +6,7 @@ import { AuthProvider, GithubAuthProvider, GoogleAuthProvider, signInWithPopup }
 import { toast } from 'react-toastify';
 import { auth } from '../../app/config/firebase';
 import { Timestamp } from 'firebase/firestore';
+import { closeModal } from '../../app/common /modals/modalSlice';
 // import { closeModal } from '../../app/common/modals/modalSlice';
 
 export default function SocialLogin() {
@@ -20,6 +21,7 @@ export default function SocialLogin() {
         setStatus({loading: true, provider: selectedProvider});
         let provider: AuthProvider;
         if (selectedProvider === 'github') {
+            // make sure provider is form Firebase Auth not from other
             provider = new GithubAuthProvider();
         } else if (selectedProvider === 'google') {
             provider = new GoogleAuthProvider();
