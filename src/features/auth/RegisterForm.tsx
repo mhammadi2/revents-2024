@@ -6,9 +6,14 @@ import ModalWrapper from '../../app/common /modals/ModalWrapper';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../app/config/firebase';
 import { closeModal } from '../../app/common /modals/modalSlice';
+import { useFireStore } from '../../app/hooks/firestore/useFirestore';
+import { Timestamp } from 'firebase/firestore';
+import { signIn } from './authSlice';
 
 
 export default function RegisterForm() {
+    // Name of the collection set by "profiles" as follows
+    const {set} = useFireStore('profiles');
     const { register, handleSubmit, setError, formState: { isSubmitting, isValid, isDirty, errors } } = useForm({
         mode: 'onTouched'
     })
@@ -21,8 +26,14 @@ export default function RegisterForm() {
             await updateProfile(userCreds.user, {
                 displayName: data.displayName
             })
-            // dispatch(signIn(userCreds.user));
+            await set(userCreds.user.uid, {
+                displayName: data.displayName,
+                email: data.email,
+                createdAt: Timestamp.now()
+            })
+            dispatch(signIn(userCreds.user));
             dispatch(closeModal());
+
            
         } catch (error: any) {
             console.log(error);
@@ -76,7 +87,7 @@ export default function RegisterForm() {
                     size='large'
                     color='teal'
                     // content='Login'
-                    content='Resgister'
+                    content='Register'
                 />
             </Form>
         </ModalWrapper>
