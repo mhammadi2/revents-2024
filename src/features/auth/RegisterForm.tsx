@@ -1,5 +1,5 @@
 // Modifed the loginForm file
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, Label } from 'semantic-ui-react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useAppDispatch } from '../../app/store/store';
 import ModalWrapper from '../../app/common /modals/ModalWrapper';
@@ -9,7 +9,7 @@ import { closeModal } from '../../app/common /modals/modalSlice';
 
 
 export default function RegisterForm() {
-    const { register, handleSubmit, formState: { isSubmitting, isValid, isDirty, errors } } = useForm({
+    const { register, handleSubmit, setError, formState: { isSubmitting, isValid, isDirty, errors } } = useForm({
         mode: 'onTouched'
     })
     const dispatch = useAppDispatch();
@@ -24,11 +24,11 @@ export default function RegisterForm() {
             // dispatch(signIn(userCreds.user));
             dispatch(closeModal());
            
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
-            // setError('root.serverError', {
-            //     type: '400', message: error.message
-            // })
+            setError('root.serverError', {
+                type: '400', message: error.message
+            })
         }
     }
     return (
@@ -58,6 +58,14 @@ export default function RegisterForm() {
                     {...register('password', {required: true})}
                     error={errors.password && 'Password is required'}
                 />
+                {errors.root && (
+                    <Label 
+                        basic color='red' 
+                        style={{display: 'block', marginBottom: 10}} 
+                        content={errors.root.serverError.message}
+                    />
+                )}
+
                 <Button 
                     loading={isSubmitting}
                     disabled={!isValid || !isDirty || isSubmitting}
