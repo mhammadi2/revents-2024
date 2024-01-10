@@ -109,3 +109,4 @@ export const useFireStore = <T extends DocumentData>(path: string) => {
     }
 
     return {loadCollection, loadDocument, create, update, remove}
+}
