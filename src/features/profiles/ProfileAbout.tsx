@@ -26,14 +26,14 @@ export default function ProfileAbout({ profile }: Props) {
                     />}
                 </Grid.Column>
                 <Grid.Column width={16}>
-                    {/* {editMode ? <ProfileForm profile={profile} setEditMode={setEditMode} /> : (
+                    {editMode ? <ProfileForm profile={profile} setEditMode={setEditMode} /> : (
                         <>
                             <div style={{ marginBottom: 10 }}>
                                 <strong>Member since: {profile.createdAt}</strong>
                                 <div style={{marginTop: 10}}>{profile.description}</div>
                             </div>
                         </>
-                    )} */}
+                    )}
                 </Grid.Column>
             </Grid>
         </Tab.Pane>
