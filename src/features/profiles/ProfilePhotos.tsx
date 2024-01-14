@@ -18,10 +18,17 @@ type Props = {
 export default function ProfilePhotos({ profile }: Props) {
     const [editMode, setEditMode] = useState(false);
     const isCurrentUser = auth.currentUser?.uid === profile.id;
+    const {data: photos, status} = useAppSelector(state => state.photos);
+    const {loadCollection} =useFireStore(`profiles/${profile.id}/photos`);
+
+    useEffect(()=>{
+            loadCollection(actions)
+    }, [loadCollection])
+
 
 
     return (
-        <Tab.Pane >
+        <Tab.Pane loading={status==='loading'} >
             <Grid>
                 <Grid.Column width={16}>
                     <Header floated='left' icon='photo' content='Photos' />
@@ -37,26 +44,25 @@ export default function ProfilePhotos({ profile }: Props) {
                     {editMode ? <PhotoUpload profile={profile} setEditMode={setEditMode} /> : (
                     // {editMode ? <p> Photo Upload Goes Here</p> : (
                         <Card.Group itemsPerRow={5}>
-                        
-                                <Card>
-                                    <Image src='/user.png'/>
+                            {photos.map(photo=> (
+                                <Card key={photo.id}>
+                                    <Image src={photo.url}/>
                                     {isCurrentUser &&
                                         <Button.Group>
                                             <Button 
                                                 basic 
                                                 color='green'
-                                            
                                             >
-                                                    Main
+                                             Main
                                             </Button>
                                             <Button 
                                                 basic color='red' 
-                                                icon='trash' 
-                                                
+                                                icon='trash'      
                                             />
                                         </Button.Group>
                                     } </Card>
                            
+                            ))}
                         </Card.Group>
                     )}
                 </Grid.Column>

@@ -13,6 +13,7 @@ const initialState: State = {
 export const photoSlice = createGenericSlice({
     name: 'photos',
     initialState: initialState as GenericState<Photo[]>,
+    // reducers is empty because are using all the funcitionality from Generic slice
     reducers: {}
 })
 
