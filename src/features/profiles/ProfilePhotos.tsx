@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Tab, Grid, Header, Button, Card, Image } from 'semantic-ui-react';
 import { Photo, Profile } from '../../app/types/profile';
-import { auth } from '../../app/config/firebase';
+import { auth, storage } from '../../app/config/firebase';
 import PhotoUpload from './PhotoUpload';
 import { useAppSelector } from '../../app/store/store';
 import { useFireStore } from '../../app/hooks/firestore/useFirestore';
@@ -19,7 +19,7 @@ export default function ProfilePhotos({ profile }: Props) {
     const [editMode, setEditMode] = useState(false);
     const isCurrentUser = auth.currentUser?.uid === profile.id;
     const {data: photos, status} = useAppSelector(state => state.photos);
-    const {loadCollection} =useFireStore(`profiles/${profile.id}/photos`);
+    const {loadCollection, remove} =useFireStore(`profiles/${profile.id}/photos`);
     const {update} = useFireStore('profiles');
 
     useEffect(()=>{
@@ -35,7 +35,17 @@ export default function ProfilePhotos({ profile }: Props) {
         photoURL:photo.url
     })
  }
+async function hangleDeletePhoto(photo:Photo) {
+    try {
+        const storageRef = ref(storage, `${profile.id}/user_images/${photo.id}`);
+        await deleteObject(storageRef)
+        await remove(photo.id)
+    } catch (error: any) {
+        toast.error(error.message)
 
+    }
+    
+}
     return (
         <Tab.Pane loading={status==='loading'} >
             <Grid>
@@ -68,7 +78,9 @@ export default function ProfilePhotos({ profile }: Props) {
                                             </Button>
                                             <Button 
                                                 basic color='red' 
-                                                icon='trash'      
+                                                icon='trash'  
+                                                disabled={photo.url === profile.photoURL}
+                                                onClick={()=>hangleDeletePhoto(photo)}    
                                             />
                                         </Button.Group>
                                     } </Card>
