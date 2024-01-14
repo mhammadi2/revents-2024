@@ -20,12 +20,21 @@ export default function ProfilePhotos({ profile }: Props) {
     const isCurrentUser = auth.currentUser?.uid === profile.id;
     const {data: photos, status} = useAppSelector(state => state.photos);
     const {loadCollection} =useFireStore(`profiles/${profile.id}/photos`);
+    const {update} = useFireStore('profiles');
 
     useEffect(()=>{
             loadCollection(actions)
     }, [loadCollection])
 
-
+ async function handleSetMain(photo:Photo) {
+    await update(profile.id, {
+        photoURL:photo.url
+    });
+    // overwirte ypescript with ! mark
+    await updateProfile(auth.currentUser!, {
+        photoURL:photo.url
+    })
+ }
 
     return (
         <Tab.Pane loading={status==='loading'} >
@@ -52,6 +61,8 @@ export default function ProfilePhotos({ profile }: Props) {
                                             <Button 
                                                 basic 
                                                 color='green'
+                                                disabled={photo.url === profile.photoURL}
+                                                onClick={()=>handleSetMain(photo)}
                                             >
                                              Main
                                             </Button>
