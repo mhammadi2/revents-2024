@@ -33,6 +33,7 @@ export default function PhotoUpload({profile, setEditMode}: Props) {
             maxFiles={1}
             server={{
                 process: (_fieldName, file, _metadata, load, error, progress) => {
+                    // _metdat tell not using
                     const id = createId();
                     const storageRef = ref(storage, `${auth.currentUser?.uid}/user_images/${id}`);
                     const task = uploadBytesResumable(storageRef, file);
@@ -45,8 +46,10 @@ export default function PhotoUpload({profile, setEditMode}: Props) {
                         err => {
                             error(err.message)
                         },
+                        // following for  the complete process
                         () => {
                             getDownloadURL(task.snapshot.ref).then(async (url) => {
+                                // if the user profile has already there or not checked by following
                                 if (!profile.photoURL) {
                                     await update(profile.id, {
                                         photoURL: url
@@ -59,8 +62,10 @@ export default function PhotoUpload({profile, setEditMode}: Props) {
                                     name: file.name,
                                     url
                                 })
+                                // Turn off edit mode
                                 setEditMode(false);
                             })
+                            // this will show grren after completing loading
                             load(id);
                         }
                     )
@@ -69,7 +74,7 @@ export default function PhotoUpload({profile, setEditMode}: Props) {
             name="files"
             labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
             credits={false}
-            allowImageCrop={true}
+            allowImageCrop={true}tu
             imageCropAspectRatio='1:1'
             instantUpload={false}
         />

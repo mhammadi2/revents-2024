@@ -34,8 +34,8 @@ export default function ProfilePhotos({ profile }: Props) {
                         />}
                 </Grid.Column>
                 <Grid.Column width={16}>
-                    {/* {editMode ? <PhotoUpload profile={profile} setEditMode={setEditMode} /> : ( */}
-                    {editMode ? <p> Photo Upload Goes Here</p> : (
+                    {editMode ? <PhotoUpload profile={profile} setEditMode={setEditMode} /> : (
+                    // {editMode ? <p> Photo Upload Goes Here</p> : (
                         <Card.Group itemsPerRow={5}>
                         
                                 <Card>
