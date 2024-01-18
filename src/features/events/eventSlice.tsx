@@ -2,8 +2,10 @@
 import { PayloadAction} from "@reduxjs/toolkit";
 // import { sampleData } from "../../app/api/sampleData"
 import { AppEvent } from "../../app/types/event";
-import {Timestamp} from 'firebase/firestore';
+
 import { GenericActions, GenericState, createGenericSlice } from "../../app/store/genericSlice";
+import { auth } from "../../app/config/firebase";
+import { Timestamp } from "firebase/firestore";
 
 
 type State ={
@@ -34,11 +36,16 @@ export const eventSlice = createGenericSlice({
             Array.isArray(events) ? eventArray = events : eventArray.push(events)
             const mapped = eventArray.map((e:any)  => {
                 //   return {...e, date:(e.date as Timestamp).toDate().toDateString()}
-                  return {...e, date:(e.date as Timestamp).toDate().toISOString()}
+                console.log(e) 
+                  return {
+                    ...e, 
+                    date: (e.date as Timestamp).toDate().toISOString(),
+                    isHost: auth.currentUser?.uid === e.hostUid,
+                    isGoing: e.attendeeIds.includes(auth.currentUser?.uid)    
+                }
 
-            });
+             });
             return {payload:mapped}
-
             }
         },
 

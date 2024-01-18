@@ -56,7 +56,7 @@ export default function EventDetailedPage() {
         
       </Grid.Column>
       <Grid.Column width={6}>
-        <EventDetailedSidebar/>
+        <EventDetailedSidebar event={event}/>
       </Grid.Column>
     </Grid>
   )
