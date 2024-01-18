@@ -1,12 +1,10 @@
-import { Grid } from "semantic-ui-react";
+import { Grid, Sticky } from "semantic-ui-react";
 import EventList from "./EventList";
 import { useAppSelector } from "../../../app/store/store";
 import { useEffect, useRef, useState} from "react";
 import { actions } from "../eventSlice";
 import { useFireStore } from "../../../app/hooks/firestore/useFirestore";
-import LoadingComponent from "../../../app/layout/LoadingComponents";
 import EventFilters from "./EventFilters";
-import { query } from "firebase/firestore";
 import EventListItemPlaceholder from "./EventListItemPlaceHolder";
 
 
@@ -89,11 +87,16 @@ loadCollection(actions, {
         )}
       </Grid.Column>
       <Grid.Column width={6}>
-        {/* <h2> Filter</h2> */}
-        <div className='ui fixed top sticky' style={{top: 98, width: 405}}>
-          <EventFilters setQuery={setQuery} />///
-          {/* <EventFilters/> */}
-        </div>
+      
+      {/* <div className='ui fixed top sticky' style={{top: 98, width: 405}}>
+          <EventFilters setQuery={setQuery} />
+        </div> */}
+
+            {/* the following code not able set offset=98 */}
+          <Sticky context={contextRef.current} offset={98}>
+
+          <EventFilters setQuery={setQuery} />
+          </Sticky>
       </Grid.Column>
     </Grid>
   )
